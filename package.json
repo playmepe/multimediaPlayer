@@ -1,0 +1,73 @@
+{
+  "name": "BibliaplayWeb",
+  "version": "1.9.9",
+  "description": "proyector de la biblia y multimedia",
+  "author": "Pablo Layme <playmepe@gmail.com>",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --disable-gpu --enable-logging",
+    "build": "npm run build:bibliaWeb && npm run build:electron",
+    "build:electron": "cd proyector && npm install --omit=dev",
+    "build:bibliaWeb": "cd bibliaWeb && npm install --omit=dev",
+    "dist": "electron-builder --linux --x64",
+    "dist:all": "electron-builder -lw",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.playme.bibliaplayweb",
+    "productName": "bibliaplayweb",
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/**"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "AudioVideo",
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.0.12",
+    "electron-is-dev": "^2.0.0"
+  },
+  "dependencies": {
+    "@distube/ytsr": "^2.0.4",
+    "canvas": "^3.2.0",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "debug": "^4.3.4",
+    "electron-store": "^8.1.0",
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.3",
+    "glob": "^11.0.3",
+    "http": "^0.0.1-security",
+    "semver": "^7.6.0",
+    "socket.io": "^4.8.1",
+    "systeminformation": "^5.27.10",
+    "ws": "^8.18.3",
+    "ytdl": "^1.4.1",
+    "ytpl": "^2.3.0"
+  },
+  "optionalDependencies": {
+    "@img/colour": "^1.0.0"
+  }
+}

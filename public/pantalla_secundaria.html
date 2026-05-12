@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="PantallaBiblia.css">
+    <title>Monitor Secundario</title>
+    <style>
+        /* Estilos idénticos al monitor principal */
+        .title-background {
+            padding: 0px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 2px solid #ffffff;
+            text-shadow: rgba(255, 255, 255, 0.8) -2px 3px 0px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .image-container {
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hide {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        .linea-cancion1 {
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 54px;
+            color: #000;
+        }
+
+        .linea-cancion2 {
+            opacity: 0.8;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 50px;
+        }
+
+        .linea-cancion {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .linea-cancion.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .linea-cancion.hide {
+            opacity: 0;
+            transform: translateY(-20);
+        }
+    </style>
+</head>
+<body>
+    <!-- Estructura idéntica al monitor principal -->
+    <div id="video-player" heigth=1080 width=1920>
+        <video id="player" preload="auto" autoplay paused muted>
+            <source id="video-source" src="" type="video/mp4">
+            Tu navegador no soporta el elemento de video.
+        </video>
+    </div>
+
+    <div class="image-container" height: 1080; max-height: 100%; max-width: 100%;>
+        <img id="background-image2" src="http://localhost:4000/img/mci-ilo1.png" alt="Fondo" class="background-image">
+    </div>
+
+    <div class="content-box hide" id="contentBox">
+        <img id="background-image" src="" alt="Fondo">
+        <div id="title" class="title-background"></div>
+        <div id="verse-content"></div>
+        <input type="checkbox" id="cancionCheckbox" class="hidden"><label for="cancionCheckbox" class="hidden">loopcancion</label>
+        <input type="checkbox" id="bibliaCheckbox" class="hidden"><label for="bibliaCheckbox" class="hidden">loopbiblia</label>
+    </div>
+
+    <script src="scripts_pantallasec.js" defer></script>
+</body>
+</html>

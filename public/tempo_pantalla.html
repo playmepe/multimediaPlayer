@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporizador</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+            color: white;
+            overflow: hidden;
+            transition: background-color 0.5s;
+        }
+        #timerDisplay {
+            font-size: 25vw;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div>
+<div id="status" hidden>Conectando... </div>
+<div class="checkbox-containertime">
+<div id="timerDisplay"><span id="countdown"><h1>00:00:00</h1></span></div></div>
+ <!--   <div class="checkbox-container">
+        <label for="hoursInput">Hra:</label>
+        <input type="number" id="hoursInput" value="0" min="0">
+    </div>
+
+    <div class="checkbox-container"><label for="minutesInput">Min:</label>
+    <input type="number" id="minutesInput" value="0" min="0" max="59"></div>
+
+    <div class="checkbox-container"><label for="secondsInput">Seg:</label>
+    <input type="number" id="secondsInput" value="0" min="0" max="59"></div>
+   <div class="checkbox-container">
+        <label for="hideHoursCheckbox">Ocultar Hora:</label>
+        <input type="checkbox" id="hideHoursCheckbox" checked onchange="toggleHideHours()">
+    </div>
+-->
+</div>
+ <!--    <div class="checkbox-container-c">
+    <div id="button2">
+    <button   id="csegButton" onclick="setInitialTime()" >Cargar e Iniciar</button>
+   <button onclick="controlTimer('start')">Iniciar</button>-->
+ <!--   <button   id="csegButton" onclick="controlTimer('pause')" >Pausar</button>
+    <button   id="csegButton" onclick="controlTimer('resume')" >Rea- nudar</button>
+    <button   id="csegButton" onclick="controlTimer('stop')"  >Detener</button>
+
+
+</div>
+</div>
+   <div class="checkbox-container-min">
+    <div id="minButton">
+        <button onclick="setPresetTimeM(5)">5 Min</button>
+        <button onclick="setPresetTimeM(10)">10 Min</button>
+        <button onclick="setPresetTimeM(15)">15 Min</button>
+        <button onclick="setPresetTimeM(20)">20 Min</button>
+        <button onclick="setPresetTimeM(25)">25 Min</button>
+        <button onclick="setPresetTimeM(30)">30 Min</button>
+        <button onclick="setPresetTimeM(35)">35 Min</button>
+        <button onclick="setPresetTimeM(40)">40 Min</button>
+        <button onclick="setPresetTimeM(45)">45 Min</button>
+        <button onclick="setPresetTimeM(50)">50 Min</button>
+        <button onclick="setPresetTimeM(55)">55 Min</button>
+        <button onclick="setPresetTimeM(60)">60 Min</button>
+    </div>
+</div>
+    <div class="checkbox-container-seg">
+    <div id="segsButton">
+        <button  id="segButton" onclick="setPresetTime(5)">5 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(10)">10 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(15)">15 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(20)">20 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(25)">25 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(30)">30 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(35)">35 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(40)">40 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(45)">45 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(50)">50 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(55)">55 seg</button>
+        <button  id="segButton"  onclick="setPresetTime(59)">59 seg</button>
+    </div>
+</div>-->
+<script src="tempoptlla.js" defer></script>
+
+</body>
+</html>

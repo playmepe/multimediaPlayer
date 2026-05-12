@@ -1,0 +1,100 @@
+body{
+    font-family: sans-serif;
+    background: #288751;
+    padding:5px;
+    display:flex;
+    gap:5px;
+     color: #000000;
+}
+button {
+    background: #e3784f;
+margin: 2px;
+    border: none;
+    border-radius: 4px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+#left{ max-width:50%; }
+#right{ max-width:50%; }
+.source-item{
+    background: linear-gradient(135deg, #53de96 0%, #4caf50 100%
+    100%
+    );
+    color: #000000;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: 1px solid #ddd;
+}
+.display-item{ border:1px solid #ddd; padding:8px; margin-bottom:8px; }
+
+input {
+    background: #53de96;
+
+    border: none;
+    border-radius: 4px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.srcSelect{
+    border:1px solid #ddd;
+    padding:8px;
+    margin-bottom:8px;
+    color: #0f0c0c;
+    background: #53de96;
+}
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+
+
+.display-item {
+    background: linear-gradient(135deg, #53de96 0%, #4caf50 100%
+    100%
+    );
+    color: #000000;;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.display-item.primary {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: 2px solid #ff4757;
+}
+
+.srcSelect {
+    background: #96e38a;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.projBtn, .closeBtn {
+    background: #e3784f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.projBtn:hover, .closeBtn:hover {
+    background: #45a049;
+}
+

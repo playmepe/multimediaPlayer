@@ -1,0 +1,1337 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="styles_ctlpantallas.css">
+    <title>Proyector — Web UI</title>
+    <style>
+      /* Estilos adicionales para mejorar la UI */
+
+
+      #left, #right {
+        background: #73b6676b;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        margin-top: 0;
+        color: #2c3e50;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      .source-item, .display-item {
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background-color: #fafafa;
+      }
+
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      button.del {
+        background-color: #e74c3c;
+      }
+
+      button.del:hover {
+        background-color: #c0392b;
+      }
+
+      button.closeBtn {
+        background-color: #f39c12;
+      }
+
+      button.closeBtn:hover {
+        background-color: #d35400;
+      }
+
+      input, select {
+        padding: 8px 0px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+      }
+
+      #srcForm {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .quick-actions {
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #99f0ae;
+        border-radius: 5px;
+      }
+
+      .quick-actions h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #2c3e50;
+      }
+
+      .action-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .action-group button {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+
+      .status-connected {
+        background-color: #2ecc71;
+      }
+
+      .status-disconnected {
+        background-color: #e74c3c;
+      }
+
+      .status-connecting {
+        background-color: #f39c12;
+      }
+
+      .connection-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+      }
+
+      .config-section {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #53de96;
+        border-radius: 5px;
+        border: 1px solid #d1ecf1;
+      }
+
+      .config-section h4 {
+        margin-top: 0;
+        color: #0c5460;
+      }
+
+      .source-config {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        gap: 8px;
+      }
+
+      .source-config label {
+        min-width: 40px;
+        font-weight: bold;
+      }
+
+      .source-config select {
+        flex: 1;
+      }
+
+      .save-config {
+        background-color: #28a745;
+        margin-top: 10px;
+      }
+
+      .save-config:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="left">
+      <h3>Fuentes</h3>
+      <div class="connection-status">
+        <span id="wsStatus" class="status-indicator status-connecting"></span>
+        <span id="wsStatusText">Conectando...</span>
+      </div>
+      <div id="sources">Cargando...</div>
+      <div id="srcForm">
+        <input id="srcName" placeholder="Nombre" />
+        <input id="srcURL" placeholder="URL (ej. http://localhost:4000/pantalla.html)" />
+        <button id="addSrc">Añadir</button>
+        <button id="sendAutoProject">Enviar Auto-Proyección</button>
+      </div>
+
+      <!-- Configuración de fuentes por defecto -->
+      <div class="config-section">
+        <h4>Configuración de Fuentes por Defecto</h4>
+        <div class="source-config">
+          <label for="defaultP1">P1:</label>
+          <select id="defaultP1">
+            <option value="">-- Seleccionar fuente --</option>
+          </select>
+        </div>
+        <div class="source-config">
+          <label for="defaultP2">P2:</label>
+          <select id="defaultP2">
+            <option value="">-- Seleccionar fuente --</option>
+          </select>
+        </div>
+        <div class="source-config">
+          <label for="defaultP3">P3:</label>
+          <select id="defaultP3">
+            <option value="">-- Seleccionar fuente --</option>
+          </select>
+        </div>
+        <button id="saveDefaults" class="save-config">Guardar Configuración</button>
+      </div>
+
+
+    </div>
+
+    <div id="right">
+      <h3>Pantallas</h3>
+
+      <!-- Botones de acción rápida P1-P3 -->
+      <div class="quick-actions">
+        <h4>Acciones Rápidas - Proyectar</h4>
+        <div class="action-group">
+          <button id="quickP1" class="quick-project" data-display="1">P1 - Pantalla 1</button>
+          <button id="quickP2" class="quick-project" data-display="2">P2 - Pantalla 2</button>
+          <button id="quickP3" class="quick-project" data-display="3">P3 - Pantalla 3</button>
+        </div>
+        <h4>Acciones Rápidas - Cerrar</h4>
+        <div class="action-group">
+          <button id="quickC1" class="quick-close" data-display="1">C1 - Pantalla 1</button>
+          <button id="quickC2" class="quick-close" data-display="2">C2 - Pantalla 2</button>
+          <button id="quickC3" class="quick-close" data-display="3">C3 - Pantalla 3</button>
+        </div>
+      </div>
+      <div>
+        <button id="refresh">Refrescar</button>
+        <button id="closeAll">Cerrar todas</button>
+        <button id="Buttoninicio">Inicio</button>
+        <button id="ButtonYTD">Descarga YT</button>
+      </div>
+      <div id="displays">Cargando...</div>
+      <div class="container">
+        <h1>Configuración de Directorios</h1>
+
+        <div class="config-section">
+            <h3>Directorios Multimedia</h3>
+            <div class="path-selector">
+                <label style="min-width: 150px;">Directorio Multimedia:</label>
+                <input type="text" id="mediaDir" class="path-input" readonly>
+                <button class="btn btn-primary" onclick="browseDirectory('mediaDir')">Examinar</button>
+            </div>
+            <div class="path-selector">
+                <label style="min-width: 150px;">Directorio de Videos:</label>
+                <input type="text" id="videosDir" class="path-input" readonly>
+                <button class="btn btn-primary" onclick="browseDirectory('videosDir')">Examinar</button>
+            </div>
+
+            <div class="path-selector">
+                <label style="min-width: 150px;">Directorio de Imágenes:</label>
+                <input type="text" id="imagesDir" class="path-input" readonly>
+                <button class="btn btn-primary" onclick="browseDirectory('imagesDir')">Examinar</button>
+            </div>
+
+            <div class="path-selector">
+                <label style="min-width: 150px;">Directorio Base (Biblia):</label>
+                <input type="text" id="baseDir" class="path-input" readonly>
+                <button class="btn btn-primary" onclick="browseDirectory('baseDir')">Examinar</button>
+            </div>
+
+            <div>
+                <h4>Directorios disponibles en el sistema:</h4>
+                <div class="directory-list" id="directoryList">
+                    <!-- Los directorios se cargarán aquí -->
+                </div>
+              <!--  <button class="btn btn-secondary" onclick="loadConfig()">Actualizar lista</button>-->
+                 <button class="btn btn-success" onclick="saveConfig()">Guardar Configuración</button>
+            <button class="btn btn-secondary" onclick="loadConfig()">Cargar Configuración</button>
+            <button onclick="resetConfig()" class="btn btn-warning">Restablecer por Defecto</button>
+            </div>
+        </div>
+
+        <div class="button-group">
+         <!--   <button class="btn btn-success" onclick="saveConfig()">Guardar Configuración</button>
+            <button class="btn btn-secondary" onclick="loadConfig()">Cargar Configuración</button>
+            <button onclick="resetConfig()" class="btn btn-warning">Restablecer Valores por Defecto</button>
+            <button class="btn btn-secondary" onclick="window.history.back()">Volver</button>-->
+
+        </div>
+
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+    </div>
+
+    <script>
+      // Elementos DOM
+      const sourcesDiv = document.getElementById('sources');
+      const displaysDiv = document.getElementById('displays');
+      const refreshBtn = document.getElementById('refresh');
+      const addBtn = document.getElementById('addSrc');
+      const nameInput = document.getElementById('srcName');
+      const urlInput = document.getElementById('srcURL');
+      const closeAllBtn = document.getElementById('closeAll');
+      const Buttoninicio = document.getElementById('Buttoninicio');
+
+      const sendAutoProjectBtn = document.getElementById('sendAutoProject');
+      const wsStatusIndicator = document.getElementById('wsStatus');
+      const wsStatusText = document.getElementById('wsStatusText');
+      const defaultP1Select = document.getElementById('defaultP1');
+      const defaultP2Select = document.getElementById('defaultP2');
+      const defaultP3Select = document.getElementById('defaultP3');
+      const saveDefaultsBtn = document.getElementById('saveDefaults');
+
+      // Variables globales
+      let wsWss = null;
+      let autoProjectionRequested = false;
+      let pollingInterval = null;
+      let defaultSources = [
+        { name: "PANTALLA PRINCIPAL", url: "http://localhost:4000/proyector.html" },
+        { name: "TEMPORIZADOR", url: "http://localhost:4000/tempoptlla.html" }
+      ];
+
+      // Configuración de fuentes por defecto para P1-P3
+      let defaultSourceConfig = {
+        p1: null, // ID de la fuente para P1
+        p2: null, // ID de la fuente para P2
+        p3: null  // ID de la fuente para P3
+      };
+
+
+
+document.getElementById('Buttoninicio').addEventListener('click', function() {
+    window.open('../index_principal.html', '_blank');
+});
+
+document.getElementById('ButtonYTD').addEventListener('click', function() {
+    window.open('http://localhost:3000', '_blank');
+});
+
+      // Cargar configuración guardada
+      function loadDefaultSourceConfig() {
+        const savedConfig = localStorage.getItem('defaultSourceConfig');
+        if (savedConfig) {
+          defaultSourceConfig = JSON.parse(savedConfig);
+          console.log('✅ Configuración de fuentes cargada:', defaultSourceConfig);
+        }
+      }
+
+      // Guardar configuración
+      function saveDefaultSourceConfig() {
+        localStorage.setItem('defaultSourceConfig', JSON.stringify(defaultSourceConfig));
+        console.log('✅ Configuración de fuentes guardada:', defaultSourceConfig);
+        sendMessage('✅ Configuración de fuentes guardada');
+      }
+
+      // Actualizar selects de configuración cuando se cargan las fuentes
+      function updateDefaultSourceSelects(sources) {
+        // Limpiar opciones existentes (excepto la primera)
+        [defaultP1Select, defaultP2Select, defaultP3Select].forEach(select => {
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+        });
+
+        // Añadir opciones para cada fuente
+        sources.forEach(source => {
+          const option = document.createElement('option');
+          option.value = source.id;
+          option.textContent = `${source.name} (${source.url})`;
+
+          defaultP1Select.appendChild(option.cloneNode(true));
+          defaultP2Select.appendChild(option.cloneNode(true));
+          defaultP3Select.appendChild(option.cloneNode(true));
+        });
+
+        // Establecer valores guardados
+        defaultP1Select.value = defaultSourceConfig.p1 || '';
+        defaultP2Select.value = defaultSourceConfig.p2 || '';
+        defaultP3Select.value = defaultSourceConfig.p3 || '';
+      }
+
+      // Configurar listeners para botones de acción rápida
+      function setupQuickActionListeners() {
+        // Botones de proyección rápida P1-P3
+        document.querySelectorAll('.quick-project').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const displayNumber = parseInt(btn.getAttribute('data-display'));
+            await quickProjectToDisplay(displayNumber);
+          });
+        });
+
+        // Botones de cierre rápido C1-C3
+        document.querySelectorAll('.quick-close').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const displayNumber = parseInt(btn.getAttribute('data-display'));
+            await quickCloseDisplay(displayNumber);
+          });
+        });
+
+        // Botón para guardar configuración
+        saveDefaultsBtn.addEventListener('click', () => {
+          defaultSourceConfig.p1 = defaultP1Select.value || null;
+          defaultSourceConfig.p2 = defaultP2Select.value || null;
+          defaultSourceConfig.p3 = defaultP3Select.value || null;
+          saveDefaultSourceConfig();
+        });
+      }
+
+      // Función para proyección rápida con fuente por defecto
+ /*     async function quickProjectToDisplay(displayNumber) {
+        try {
+          const [displays, sources] = await Promise.all([
+            api('displays').catch(() => []),
+            api('sources').catch(() => [])
+          ]);
+
+          if (displayNumber < 1 || displayNumber > displays.length) {
+            sendMessage(`❌ Pantalla ${displayNumber} no disponible`);
+            return;
+          }
+
+          const display = displays[displayNumber - 1];
+
+          // Obtener la fuente por defecto para esta pantalla
+          let source = null;
+          const defaultSourceId = defaultSourceConfig[`p${displayNumber}`];
+
+          if (defaultSourceId) {
+            source = sources.find(s => s.id == defaultSourceId);
+          }
+
+          // Si no hay fuente por defecto configurada, usar la primera disponible
+          if (!source) {
+            source = sources[0];
+            if (!source) {
+              sendMessage(`❌ No hay fuentes disponibles para Pantalla ${displayNumber}`);
+              return;
+            }
+            console.log(`⚠️ Usando fuente por defecto (no configurada) para P${displayNumber}: ${source.name}`);
+          }
+
+          const projectionUrl = `${source.url}?displayId=${display.id}&maximized=false`;
+
+          await fetch('/api/open', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              displayId: display.id,
+              url: projectionUrl
+            })
+          });
+
+          console.log(`✅ Proyección P${displayNumber} en ${display.name}: ${source.name}`);
+          sendMessage(`✅ Proyectando "${source.name}" en Pantalla ${displayNumber}`);
+          loadUI();
+        } catch (error) {
+          console.error(`❌ Error en proyección P${displayNumber}:`, error);
+          sendMessage(`❌ Error proyectando en Pantalla ${displayNumber}`);
+        }
+      }
+*/
+      // FUNCIÓN: Proyección rápida con fuente por defecto - VERSIÓN CORREGIDA
+async function quickProjectToDisplay(displayNumber) {
+  try {
+    const [displays, sources] = await Promise.all([
+      api('displays').catch(() => []),
+      api('sources').catch(() => [])
+    ]);
+
+    // STRATEGIA 1: Usar ID fijo basado en displayNumber
+    let targetDisplayId;
+    if (displayNumber === 1) {
+      targetDisplayId = 66; // Pantalla interna
+    } else if (displayNumber === 2) {
+     // targetDisplayId = 67; // Pantalla externa (TU CASO)
+      targetDisplayId = 78; // Pantalla externa (TU CASO)
+    } else if (displayNumber === 3) {
+      targetDisplayId = displays[2]?.id; // Tercera si existe
+    }
+
+    // STRATEGY 2: Buscar por posición [1920,0] para pantalla externa
+    let targetDisplay;
+    if (displayNumber === 2) {
+      // Buscar específicamente pantalla en posición [1920,0]
+      targetDisplay = displays.find(d => d.bounds?.x === 1920 && d.bounds?.y === 0);
+    } else if (displayNumber === 1) {
+      // Buscar pantalla en [0,0] para interna
+      targetDisplay = displays.find(d => d.bounds?.x === 0 && d.bounds?.y === 0);
+    }
+
+    // STRATEGY 3: Si no encuentra por posición, usar ID
+    if (!targetDisplay && targetDisplayId) {
+      targetDisplay = displays.find(d => d.id === targetDisplayId);
+    }
+
+    // STRATEGY 4: Fallback a la segunda pantalla
+    if (!targetDisplay && displays.length >= 2) {
+      if (displayNumber === 1) {
+        targetDisplay = displays[0];
+      } else if (displayNumber === 2) {
+        targetDisplay = displays[1];
+      }
+    }
+
+    if (!targetDisplay) {
+      console.warn(`❌ No se pudo encontrar pantalla para P${displayNumber}`);
+      sendMessage(`❌ Pantalla ${displayNumber} no disponible`);
+      console.log('Disponibles:', displays);
+      return;
+    }
+
+    // Obtener la fuente por defecto para esta pantalla
+    let source = null;
+    const defaultSourceId = defaultSourceConfig[`p${displayNumber}`];
+
+    if (defaultSourceId) {
+      source = sources.find(s => s.id == defaultSourceId);
+    }
+
+    // Si no hay fuente por defecto configurada, usar la primera disponible
+    if (!source) {
+      source = sources[0];
+      if (!source) {
+        sendMessage(`❌ No hay fuentes disponibles para Pantalla ${displayNumber}`);
+        return;
+      }
+      console.log(`⚠️ Usando fuente por defecto (no configurada) para P${displayNumber}: ${source.name}`);
+    }
+
+    const projectionUrl = `${source.url}?displayId=${targetDisplay.id}&maximized=false`;
+
+    console.log(`🎯 Proyectando P${displayNumber} en:`, {
+      displayId: targetDisplay.id,
+      displayName: targetDisplay.name,
+      position: targetDisplay.position,
+      bounds: targetDisplay.bounds,
+      url: projectionUrl
+    });
+
+    const response = await fetch('/api/open', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        displayId: targetDisplay.id,
+        url: projectionUrl
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ Proyección P${displayNumber} exitosa:`, result);
+      sendMessage(`✅ Proyectando "${source.name}" en Pantalla ${displayNumber} (${targetDisplay.name})`);
+    } else {
+      console.error(`❌ Error en proyección P${displayNumber}:`, result);
+      sendMessage(`❌ Error: ${result.error || 'Proyección falló'}`);
+    }
+
+    loadUI();
+  } catch (error) {
+    console.error(`❌ Error en proyección P${displayNumber}:`, error);
+    sendMessage(`❌ Error proyectando en Pantalla ${displayNumber}: ${error.message}`);
+  }
+}
+
+      // Función para cierre rápido
+      async function quickCloseDisplay(displayNumber) {
+        try {
+          const displays = await api('displays').catch(() => []);
+
+          if (displayNumber < 1 || displayNumber > displays.length) {
+            sendMessage(`❌ Pantalla ${displayNumber} no disponible`);
+            return;
+          }
+
+          const display = displays[displayNumber - 1];
+
+          await fetch('/api/close', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ displayId: display.id })
+          });
+
+          console.log(`✅ Cierre rápido de Pantalla ${displayNumber}`);
+          sendMessage(`✅ Cerrando Pantalla ${displayNumber}`);
+          loadUI();
+        } catch (error) {
+          console.error(`❌ Error en cierre rápido C${displayNumber}:`, error);
+          sendMessage(`❌ Error cerrando Pantalla ${displayNumber}`);
+        }
+      }
+
+      // Función para inicializar la conexión WebSocket
+      function initializeWebSocket() {
+        console.log('🔌 Conectando a WebSocket en puerto 8082...');
+        updateConnectionStatus('connecting', 'Conectando...');
+
+        try {
+          wsWss = new WebSocket(`ws://${window.location.hostname}:8082`);
+
+          wsWss.onopen = () => {
+            console.log('✅ WebSocket conectado correctamente al puerto 8082');
+            updateConnectionStatus('connected', 'Conectado');
+            clearInterval(pollingInterval); // Limpiar polling si existe
+            initializeDefaultSources();
+          };
+
+          wsWss.onmessage = (ev) => {
+            console.log('📨 Mensaje WebSocket recibido:', ev.data);
+            processWebSocketMessage(ev.data);
+          };
+
+          wsWss.onerror = (error) => {
+            console.error('❌ Error de WebSocket:', error);
+            updateConnectionStatus('disconnected', 'Error de conexión');
+            startPollingFallback();
+          };
+
+          wsWss.onclose = () => {
+            console.log('🔌 WebSocket cerrado');
+            updateConnectionStatus('disconnected', 'Desconectado');
+            startPollingFallback();
+          };
+        } catch (error) {
+          console.error('❌ Error al crear WebSocket:', error);
+          updateConnectionStatus('disconnected', 'Error de conexión');
+          startPollingFallback();
+        }
+      }
+
+      // Actualizar indicador de estado de conexión
+      function updateConnectionStatus(status, text) {
+        wsStatusIndicator.className = 'status-indicator';
+
+        switch(status) {
+          case 'connected':
+            wsStatusIndicator.classList.add('status-connected');
+            break;
+          case 'disconnected':
+            wsStatusIndicator.classList.add('status-disconnected');
+            break;
+          case 'connecting':
+            wsStatusIndicator.classList.add('status-connecting');
+            break;
+        }
+
+        wsStatusText.textContent = text;
+      }
+
+      // Función para procesar mensajes WebSocket
+      function processWebSocketMessage(data) {
+        try {
+          const msg = JSON.parse(data);
+
+          switch (msg.type) {
+            case 'auto-project-startup':
+              console.log('🚀 Recibida solicitud de proyección automática desde servidor');
+              handleAutoProjectionRequest();
+              break;
+
+            case 'displays-changed':
+            case 'sources-changed':
+            case 'projection-opened':
+            case 'projection-closed':
+              console.log('🔄 Recargando UI por:', msg.type);
+              loadUI();
+              break;
+
+            case 'control-command':
+              handleControlCommand(msg.command, msg.data);
+              break;
+
+            default:
+              console.log('📨 Mensaje WebSocket no manejado:', msg.type);
+          }
+        } catch (error) {
+          // Si no es JSON, podría ser un mensaje de proyector
+          if (typeof data === 'string' && !data.startsWith('font-size:')) {
+            handleControlCommand(data);
+          }
+        }
+      }
+
+      // Fallback con polling
+      function startPollingFallback() {
+        console.log('🔄 Iniciando polling cada 5 segundos...');
+        clearInterval(pollingInterval);
+        pollingInterval = setInterval(loadUI, 5000);
+        initializeDefaultSources();
+      }
+
+      // Event Listeners
+      sendAutoProjectBtn.addEventListener('click', () => {
+        console.log('📤 Enviando mensaje auto-project-startup por WebSocket...');
+        sendAutoProjectMessage();
+      });
+
+      refreshBtn.addEventListener('click', loadUI);
+
+      addBtn.addEventListener('click', async () => {
+        const name = nameInput.value.trim();
+        const url = urlInput.value.trim();
+        if (!url) return alert('URL requerida');
+
+        await addSource(name, url);
+        nameInput.value = '';
+        urlInput.value = '';
+        loadUI();
+      });
+
+      closeAllBtn.addEventListener('click', async () => {
+        await fetch('/api/close-all', { method: 'POST' });
+        loadUI();
+      });
+
+      // FUNCIÓN: Enviar mensaje WebSocket de auto-proyección
+      function sendAutoProjectMessage() {
+        if (!wsWss || wsWss.readyState !== WebSocket.OPEN) {
+          console.error('❌ WebSocket no conectado');
+          sendMessage('❌ Error: WebSocket no conectado');
+          return;
+        }
+
+        try {
+          const message = JSON.stringify({
+            type: 'auto-project-startup',
+            timestamp: new Date().toISOString(),
+            message: 'Solicitud de proyección automática',
+            source: 'manual-button',
+            requestedBy: 'control-panel'
+          });
+
+          wsWss.send(message);
+          console.log('✅ Mensaje auto-project-startup enviado por WebSocket');
+          sendMessage('✅ Solicitud de auto-proyección enviada');
+        } catch (error) {
+          console.error('❌ Error enviando mensaje WebSocket:', error);
+          sendMessage('❌ Error enviando solicitud');
+        }
+      }
+
+      // FUNCIÓN: Manejar solicitud de proyección automática
+      async function handleAutoProjectionRequest() {
+        if (autoProjectionRequested) {
+          console.log('⚠️ Proyección automática ya fue solicitada, omitiendo...');
+          return;
+        }
+
+        autoProjectionRequested = true;
+        console.log('🔄 Ejecutando proyección automática...');
+
+        try {
+          const [displays, sources] = await Promise.all([
+            api('displays').catch(() => []),
+            api('sources').catch(() => [])
+          ]);
+
+          const defaultSource = sources.find(s =>
+            s.name === "PANTALLA PRINCIPAL" &&
+            s.url === "http://localhost:4000/proyector.html"
+          );
+
+          if (!defaultSource) {
+            console.warn('⚠️ Fuente por defecto no encontrada');
+            sendMessage('⚠️ Fuente por defecto no encontrada');
+            return;
+          }
+
+          if (displays.length === 0) {
+            console.warn('⚠️ No hay pantallas disponibles');
+            sendMessage('⚠️ No hay pantallas disponibles');
+            return;
+          }
+
+          let targetDisplay = null;
+
+          if (displays.length >= 2) {
+            targetDisplay = displays.find(d => !d.isPrimary) || displays[1];
+            console.log(`📺 Proyectando en segunda pantalla: ${targetDisplay.name}`);
+          } else {
+            targetDisplay = displays[0];
+            console.log(`📺 Proyectando en única pantalla: ${targetDisplay.name}`);
+          }
+
+          const projectionUrl = `${defaultSource.url}?displayId=${targetDisplay.id}&autoStart=true&maximized=false`;
+
+          await fetch('/api/open', {
+            method: 'POST',
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({
+              displayId: targetDisplay.id,
+              url: projectionUrl
+            })
+          });
+
+          console.log(`✅ Proyección automática completada en ${targetDisplay.name}`);
+          sendMessage(`✅ Proyección automática en ${targetDisplay.name}`);
+
+        } catch (error) {
+          console.error('❌ Error en proyección automática:', error);
+          sendMessage('❌ Error en proyección automática');
+        } finally {
+          autoProjectionRequested = false;
+        }
+      }
+
+      // FUNCIÓN: Solo crear las fuentes por defecto si no existen
+      async function initializeDefaultSources() {
+        try {
+          console.log('🔍 Verificando si existen las fuentes por defecto...');
+          const sources = await api('sources').catch(() => []);
+
+          for (const source of defaultSources) {
+            const exists = sources.some(s => s.name === source.name && s.url === source.url);
+            if (!exists) {
+              console.log(`➕ Añadiendo fuente ${source.name}...`);
+              await addSource(source.name, source.url);
+            } else {
+              console.log(`✅ La fuente ${source.name} ya existe`);
+            }
+          }
+
+          console.log('✅ Verificación de fuentes por defecto completada');
+
+        } catch (error) {
+          console.error('❌ Error al inicializar fuentes por defecto:', error);
+        } finally {
+          loadUI();
+        }
+      }
+
+      // FUNCIÓN: Añadir fuente (reutilizable)
+      async function addSource(name, url) {
+        await fetch('/api/sources', {
+          method: 'POST',
+          headers: {'content-type': 'application/json'},
+          body: JSON.stringify({ name, url })
+        });
+      }
+
+      // FUNCIÓN: Manejar comandos de control de pantallas
+      async function handleControlCommand(command, data = null) {
+        console.log('🎮 Procesando comando:', command);
+
+        try {
+          const [displays, sources] = await Promise.all([
+            api('displays').catch(() => []),
+            api('sources').catch(() => [])
+          ]);
+
+          if (!displays.length) {
+            console.warn('⚠️ No hay pantallas disponibles');
+            sendMessage('⚠️ No hay pantallas disponibles');
+            return;
+          }
+
+          if (!sources.length) {
+            console.warn('⚠️ No hay fuentes disponibles');
+            sendMessage('⚠️ No hay fuentes disponibles');
+            return;
+          }
+
+          const commandLower = command.toLowerCase().trim();
+
+          // Comando: "pantallaX [nombre_fuente|url|id]"
+          const screenMatch = commandLower.match(/^(pantalla|screen|display)?\s*(\d+)\s+(.+)$/);
+          if (screenMatch) {
+            const screenNumber = parseInt(screenMatch[2]);
+            const sourceIdentifier = screenMatch[3].trim();
+            await projectToScreen(screenNumber, sourceIdentifier, displays, sources);
+            return;
+          }
+
+          // Comando: "cerrar pantallaX" o "close screenX"
+          const closeMatch = commandLower.match(/^(cerrar|close)\s+(pantalla|screen|display)?\s*(\d+)$/);
+          if (closeMatch) {
+            const screenNumber = parseInt(closeMatch[3]);
+            await closeScreen(screenNumber, displays);
+            return;
+          }
+
+          // Comando: "cerrar todo" o "close all"
+          if (commandLower.match(/^(cerrar todo|close all)$/)) {
+            await fetch('/api/close-all', { method: 'POST' });
+            loadUI();
+            sendMessage('✅ Todas las proyecciones cerradas');
+            return;
+          }
+
+          // Comando: "actualizar" o "refresh"
+          if (commandLower.match(/^(actualizar|refresh|reload)$/)) {
+            loadUI();
+            sendMessage('✅ Interfaz actualizada');
+            return;
+          }
+
+          // Comando: "lista" o "list"
+          if (commandLower.match(/^(lista|list|screens|pantallas)$/)) {
+            sendDisplayList(displays);
+            return;
+          }
+
+          console.warn('❌ Comando no reconocido:', command);
+          sendMessage(`❌ Comando no reconocido: "${command}"`);
+
+        } catch (error) {
+          console.error('💥 Error procesando comando:', error);
+          sendMessage('❌ Error procesando comando');
+        }
+      }
+
+      // FUNCIÓN: Proyectar a pantalla específica
+      async function projectToScreen(screenNumber, sourceIdentifier, displays, sources) {
+        if (screenNumber < 1 || screenNumber > displays.length) {
+          const message = `⚠️ Pantalla ${screenNumber} no existe. Pantallas disponibles: 1-${displays.length}`;
+          console.warn(message);
+          sendMessage(message);
+          return;
+        }
+
+        const display = displays[screenNumber - 1];
+        let source = null;
+
+        // Buscar fuente por diferentes criterios
+        if (!isNaN(sourceIdentifier)) {
+          source = sources.find(s => s.id === parseInt(sourceIdentifier));
+        } else {
+          source = sources.find(s =>
+            s.name.toLowerCase().includes(sourceIdentifier.toLowerCase()) ||
+            s.url.toLowerCase().includes(sourceIdentifier.toLowerCase())
+          );
+        }
+
+        if (!source) {
+          console.warn(`⚠️ Fuente "${sourceIdentifier}" no encontrada`);
+          sendMessage(`❌ Fuente "${sourceIdentifier}" no encontrada`);
+          return;
+        }
+
+        const projectionUrl = `${source.url}?displayId=${display.id}&maximized=false`;
+
+        await fetch('/api/open', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            displayId: display.id,
+            url: projectionUrl
+          })
+        });
+
+        console.log(`✅ Proyectando "${source.name}" en ${display.name}`);
+        sendMessage(`✅ Proyectando "${source.name}" en Pantalla ${screenNumber}`);
+        loadUI();
+      }
+
+      // FUNCIÓN: Cerrar pantalla específica
+      async function closeScreen(screenNumber, displays) {
+        if (screenNumber < 1 || screenNumber > displays.length) {
+          console.warn(`⚠️ Pantalla ${screenNumber} no existe`);
+          sendMessage(`❌ Pantalla ${screenNumber} no existe`);
+          return;
+        }
+
+        const display = displays[screenNumber - 1];
+
+        await fetch('/api/close', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ displayId: display.id })
+        });
+
+        console.log(`✅ Cerrando pantalla ${screenNumber}: ${display.name}`);
+        sendMessage(`✅ Cerrando Pantalla ${screenNumber}`);
+        loadUI();
+      }
+
+      // FUNCIÓN: Enviar lista de pantallas disponibles
+      function sendDisplayList(displays) {
+        if (!displays.length) {
+          sendMessage('📺 No hay pantallas detectadas');
+          return;
+        }
+
+        let message = '📺 Pantallas disponibles:\n';
+        displays.forEach((display, index) => {
+          const status = display.isPrimary ? ' (PRIMARIA)' : '';
+          message += `${index + 1}. ${display.name}${status}\n`;
+        });
+
+        sendMessage(message);
+      }
+
+      // FUNCIÓN: Enviar mensaje de respuesta
+      function sendMessage(message) {
+        console.log('💬 Mensaje del sistema:', message);
+        showNotification(message);
+
+        if (wsWss && wsWss.readyState === WebSocket.OPEN) {
+          wsWss.send(JSON.stringify({
+            type: 'system-message',
+            message: message,
+            timestamp: new Date().toISOString()
+          }));
+        }
+      }
+
+      // FUNCIÓN: Mostrar notificación en la UI
+      function showNotification(message) {
+        // Eliminar notificaciones anteriores
+        const existingNotifications = document.querySelectorAll('.system-notification');
+        existingNotifications.forEach(notification => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        });
+
+        const notification = document.createElement('div');
+        notification.className = 'system-notification';
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #333;
+          color: white;
+          padding: 15px;
+          border-radius: 5px;
+          z-index: 1000;
+          max-width: 400px;
+          word-wrap: break-word;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+        notification.textContent = message;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 15000);
+      }
+
+      // FUNCIÓN: API wrapper
+      async function api(path, opts = {}) {
+        try {
+          console.log(`🌐 Fetching: /api/${path}`);
+          const res = await fetch(`/api/${path}`, opts);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+          const data = await res.json();
+          console.log(`✅ Response from /api/${path}:`, data);
+          return data;
+        } catch (error) {
+          console.error(`❌ Error en /api/${path}:`, error);
+          throw error;
+        }
+      }
+
+      // FUNCIÓN: Cargar UI
+      async function loadUI() {
+        console.log('🔄 Cargando UI...');
+        try {
+          const [displays, sources] = await Promise.all([
+            api('displays').catch(error => {
+              console.error('Error cargando displays:', error);
+              return [];
+            }),
+            api('sources').catch(error => {
+              console.error('Error cargando sources:', error);
+              return [];
+            })
+          ]);
+
+          console.log('📺 Displays:', displays);
+          console.log('🔗 Sources:', sources);
+
+          renderSources(sources);
+          renderDisplays(displays, sources);
+          updateDefaultSourceSelects(sources);
+        } catch (error) {
+          console.error('💥 Error en loadUI:', error);
+          displaysDiv.innerHTML = `<div style="color: red; padding: 10px;">
+            Error cargando datos: ${error.message}
+            <br><button onclick="loadUI()">Reintentar</button>
+          </div>`;
+        }
+      }
+
+      // FUNCIÓN: Renderizar fuentes
+      function renderSources(sources) {
+        sourcesDiv.innerHTML = '';
+        if (!sources.length) {
+          sourcesDiv.innerHTML = '<em>No hay fuentes</em>';
+          return;
+        }
+
+        sources.forEach(s => {
+          const el = document.createElement('div');
+          el.className = 'source-item';
+          el.innerHTML = `
+            <div><strong>${escapeHtml(s.name)}</strong></div>
+            <div style="font-size:0.9em;color:#555">${escapeHtml(s.url)}</div>
+            <div style="margin-top:6px;">
+              <button data-id="${s.id}" class="del">Eliminar</button>
+              <button data-id="${s.id}" class="proj">Proyectar en primer display</button>
+            </div>`;
+          sourcesDiv.appendChild(el);
+        });
+
+        // Event listeners para botones de fuentes
+        attachSourceEventListeners();
+      }
+
+      // FUNCIÓN: Adjuntar event listeners a fuentes
+      function attachSourceEventListeners() {
+        Array.from(sourcesDiv.querySelectorAll('.del')).forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            await fetch(`/api/sources/${id}`, { method: 'DELETE' });
+            loadUI();
+          });
+        });
+
+        Array.from(sourcesDiv.querySelectorAll('.proj')).forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = Number(btn.getAttribute('data-id'));
+            const sources = await api('sources');
+            const s = sources.find(x => x.id === id);
+            if (!s) return alert('Fuente no encontrada');
+
+            const displays = await api('displays');
+            if (!displays.length) return alert('No hay pantallas detectadas');
+
+            const projectionUrl = `${s.url}?displayId=${displays[0].id}&maximized=false`;
+
+            await fetch('/api/open', {
+              method: 'POST',
+              headers: {'content-type': 'application/json'},
+              body: JSON.stringify({
+                displayId: displays[0].id,
+                url: projectionUrl
+              })
+            });
+
+            loadUI();
+          });
+        });
+      }
+
+      // FUNCIÓN: Renderizar displays
+      function renderDisplays(displays, sources) {
+        displaysDiv.innerHTML = '';
+        if (!displays.length) {
+          displaysDiv.innerHTML = '<em>No hay pantallas detectadas</em>';
+          return;
+        }
+
+        displays.forEach((d, index) => {
+          const el = document.createElement('div');
+          el.className = 'display-item';
+
+          const displayInfo = `
+            <div><strong>Pantalla ${index + 1}: ${escapeHtml(d.name)}</strong></div>
+            <div style="font-size:0.9em;color:#555;">
+              Resolución: ${d.resolution} |
+              ${d.frequency}Hz |
+              Posición: ${d.position}
+              ${d.internal ? ' | (Integrada)' : ''}
+              ${d.isPrimary ? ' | <strong style="color:#ff4757;">PRIMARIA</strong>' : ''}
+            </div>
+            <div style="font-size:0.8em;color:#777;">
+              ID: ${d.id} |
+              Fabricante: ${d.manufacturer}
+            </div>`;
+
+          const opts = sources.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+
+          el.innerHTML = `
+            ${displayInfo}
+            <div style="margin-top:6px;">
+              <select data-id="${d.id}" class="srcSelect" style="width:60%;">${opts}</select>
+              <button data-id="${d.id}" class="projBtn">Proyectar</button>
+              <button data-id="${d.id}" class="closeBtn">Cerrar</button>
+            </div>`;
+
+          displaysDiv.appendChild(el);
+        });
+
+        // Event listeners para botones de displays
+        attachDisplayEventListeners();
+      }
+
+      // FUNCIÓN: Adjuntar event listeners a displays
+      function attachDisplayEventListeners() {
+        Array.from(displaysDiv.querySelectorAll('.projBtn')).forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const displayId = Number(btn.getAttribute('data-id'));
+            const sel = displaysDiv.querySelector(`select[data-id="${displayId}"]`);
+            if (!sel) return;
+
+            const srcId = Number(sel.value);
+            const sources = await api('sources');
+            const s = sources.find(x => x.id === srcId);
+            if (!s) return alert('Fuente no encontrada');
+
+            const projectionUrl = `${s.url}?displayId=${displayId}&maximized=false`;
+
+            await fetch('/api/open', {
+              method: 'POST',
+              headers: {'content-type': 'application/json'},
+              body: JSON.stringify({
+                displayId,
+                url: projectionUrl
+              })
+            });
+
+            loadUI();
+          });
+        });
+
+        Array.from(displaysDiv.querySelectorAll('.closeBtn')).forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const displayId = Number(btn.getAttribute('data-id'));
+            await fetch('/api/close', {
+              method: 'POST',
+              headers: {'content-type': 'application/json'},
+              body: JSON.stringify({ displayId })
+            });
+
+            loadUI();
+          });
+        });
+      }
+
+      // FUNCIÓN: Escape HTML
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[c]));
+      }
+
+      /////////////////////////   config carpetas multimedia  //////////////////
+
+async function loadConfig() {
+  try {
+    const response = await fetch('/api/config');
+    const data = await response.json();
+
+    if (data.success) {
+      document.getElementById('baseDir').value = data.config.PATHS.BASE_DIR;
+      document.getElementById('mediaDir').value = data.config.PATHS.VIDEOS_DIR; // Mismo para simplificar
+      document.getElementById('videosDir').value = data.config.PATHS.VIDEOS_DIR;
+      document.getElementById('imagesDir').value = data.config.PATHS.IMAGES_DIR;
+    }
+  } catch (error) {
+    console.error('Error cargando configuración:', error);
+    alert('Error cargando configuración');
+  }
+}
+
+async function saveConfig() {
+  try {
+    const config = {
+      PATHS: {
+        BASE_DIR: document.getElementById('baseDir').value,
+        VIDEOS_DIR: document.getElementById('videosDir').value,
+        IMAGES_DIR: document.getElementById('imagesDir').value
+      }
+    };
+
+    const response = await fetch('/api/config', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ config })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert('Configuración guardada correctamente');
+      // Recargar la aplicación o mostrar mensaje de reinicio necesario
+    } else {
+      alert('Error guardando configuración: ' + data.error);
+    }
+  } catch (error) {
+    console.error('Error guardando configuración:', error);
+    alert('Error guardando configuración');
+  }
+}
+
+async function resetConfig() {
+  if (confirm('¿Estás seguro de que quieres restablecer la configuración a los valores por defecto?')) {
+    try {
+      const response = await fetch('/api/config/reset', { method: 'POST' });
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Configuración restablecida correctamente');
+        loadConfig(); // Recargar los valores en el formulario
+      }
+    } catch (error) {
+      console.error('Error resetando configuración:', error);
+      alert('Error resetando configuración');
+    }
+  }
+}
+
+ // Examinar directorio (simulado)
+        function browseDirectory(fieldId) {
+            const currentPath = document.getElementById(fieldId).value;
+            const newPath = prompt('Ingresa la ruta del directorio:', currentPath);
+
+            if (newPath) {
+                // Validar que la ruta no esté vacía
+                if (newPath.trim()) {
+                    document.getElementById(fieldId).value = newPath.trim();
+                }
+            }
+        }
+
+        initializeWebSocket();
+// Cargar configuración al abrir la página
+document.addEventListener('DOMContentLoaded', loadConfig,    loadUI());
+ // Inicialización
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeWebSocket();
+        setupQuickActionListeners();
+        loadDefaultSourceConfig();
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control - Bibliaplay</title>
+    <style>
+        :root {
+            --primary-color: #172840;
+            --secondary-color: #6b8cbc;
+            --accent-color: #ff9800;
+            --bg-color: #1c5d11;
+            --text-color: #333;
+            --border-color: #ddd;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+            --section-bg: #81d1a6;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0px;
+            gap: 0px;
+        }
+
+        /* Diseño horizontal para pantallas más grandes */
+        @media (min-width: 470px) {
+            .control-panel {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .section {
+                flex: 1;
+                min-width: 200px;
+                margin: 5px;
+            }
+        }
+
+        .section {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+                flex-direction: column;
+            gap: 4px;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            margin-bottom: 0px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0px;
+        }
+
+        .connection-status {
+            position: sticky;
+            top: 0;
+            background-color: var(--error-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10;
+            margin-bottom: 5px;
+        }
+
+        .connection-status.connected {
+            background-color: var(--success-color);
+        }
+
+        .volume-controls, .mix-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .volume-control, .mix-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-control label, .mix-control label {
+            min-width: 70px;
+            font-size: 13px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 6px;
+            width:30px;
+            border-radius: 3px;
+            background: #2b6cd1;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+        }
+
+        .volume-value {
+            min-width: 40px;
+            text-align: right;
+            font-size: 12px;
+        }
+
+        .video-controls, .playback-controls, .pantalla-controls {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+             margin: 3px auto;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 16px 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+         .btnvcontrol {
+            width: 60px;
+            background-color: red;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .button {
+            padding: 13px;
+            min-width: 32px;
+        }
+         .quick-project, .quick-close {
+            padding: 16px;
+            min-width: 32px;
+        }
+
+        .youtube-input {
+            display: flex;
+            gap: 6px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 6px 8px;
+            width: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--error-color);
+            margin-right: 5px;
+        }
+
+        .status-indicator.active {
+            background-color: var(--success-color);
+        }
+
+        #currentPlayerStatus {
+            font-size: 22px;
+            font-style: italic;
+        }
+
+        /* Para pantallas muy pequeñas */
+        @media (max-width: 300px) {
+            .control-panel {
+                padding: 5px;
+            }
+
+            .section {
+                padding: 8px;
+            }
+
+            .volume-control, .mix-control {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .volume-control label, .mix-control label {
+                min-width: auto;
+            }
+
+            .volume-value {
+                align-self: flex-end;
+            }
+        }
+        .active {
+    background: #4CAF50 !important;
+    color: white;
+    }
+      .quick-actions {
+       /* margin: 15px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;*/
+      }
+
+      .quick-actions h4 {
+        margin-top: 0;
+        margin-bottom: 0px;
+        color: #2c3e50;
+      }
+
+      .action-group {
+        display: flex;
+        flex-direction: row;
+
+        gap: 8px;
+        margin-bottom: 2px;
+      }
+
+      .action-group button {
+        flex: 1;
+        min-width: 57px;
+      }
+
+      /* Estilos para controles de pantalla */
+      .screen-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      .screen-action-group {
+          display: flex;
+          gap: 6px;
+      }
+
+      .screen-action-group button {
+          flex: 1;
+          padding: 10px 2px;
+      }
+
+      .btn-project {
+          background-color: #2196F3;
+      }
+
+      .btn-close {
+          background-color: #f44336;
+      }
+
+      .btn-refresh {
+          background-color: #4CAF50;
+      }
+
+      .btn-close-all {
+          background-color: #FF9800;
+      }
+
+      .api-status {
+          margin-top: 8px;
+          padding: 4px;
+          border-radius: 4px;
+          text-align: center;
+          font-size: 12px;
+          display: none;
+      }
+
+      .api-status.success {
+          background-color: #4CAF50;
+          color: white;
+          display: block;
+      }
+
+      .api-status.error {
+          background-color: #f44336;
+          color: white;
+          display: block;
+      }
+      #displaySelector {
+      width: 50px;
+      border-radius: 4px;
+      padding: 4px;
+      }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <div class="connection-status" id="connectionStatus" hidden>Desconectado</div>
+
+        <div class="section">
+            <h2>Volumen</h2>
+            <div class="volume-controls">
+                <div class="volume-control">
+                    <label>Media:</label>
+                    <input type="range" class="volume-slider" id="htmlVolume" min="0" max="100" value="100">
+                    <div class="volume-value" id="htmlVolumeValue">100%</div>
+                </div>
+
+                <div class="volume-control">
+                    <label>YouTube:</label>
+                    <input type="range" class="volume-slider" id="youtubeVolume" min="0" max="100" value="0">
+                    <div class="volume-value" id="youtubeVolumeValue">100%</div>
+                </div>
+
+                <div class="volume-control">
+                    <label>General:</label>
+                    <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="100">
+                    <div class="volume-value" id="masterVolumeValue">100%</div>
+
+                </div>
+                <span id="currentPlayerStatus">Actual: MEDIA</span>
+            </div>
+        </div>
+
+
+
+        <div class="section">
+            <h2>Switch / Crossfade</h2>
+            <div class="mix-controls">
+                <div class="mix-control">
+                    <label>Media:</label>
+                    <input type="range" class="volume-slider" id="htmlOpacity" min="0" max="100" value="100">
+                    <div class="volume-value" id="htmlOpacityValue">100%</div>
+                </div>
+
+                <div class="mix-control">
+                    <label>YouTube:</label>
+                    <input type="range" class="volume-slider" id="youtubeOpacity" min="0" max="100" value="100">
+                    <div class="volume-value" id="youtubeOpacityValue">100%</div>
+                </div>
+            </div>
+            <div class="video-controls">
+                <button class="btnvcontrol" id="btnmedia" onclick="showOnlyHTML()">Media</button>
+                <button class="btnvcontrol" onclick="togglePlayers()" id="toggleBtn">🎚></button>
+                <button class="btnvcontrol"  id="btnytube" onclick="showOnlyYouTube()">YouTube</button>
+
+
+            </div>
+        </div>
+
+        <div class="section">
+        <h2>Media</h2>
+            <div class="yt-controls">
+
+                <div class="playback-controls">
+                    <button id="playBtn" data1-cmd="play" class="button" aria-label="Reproducir">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <button id="nextBtn" data1-cmd="playNext" class="button" aria-label="Siguiente">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 6v12l8.5-6L6 6zM16 6v12h2V6h-2z"/>
+                        </svg>
+                    </button>
+                    <button id="pauseBtn" data1-cmd="pause" class="button" aria-label="Pausar">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    </button>
+                    <button id="stopBtn" data1-cmd="stop" class="button" aria-label="Detener">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 6h12v12H6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div>
+                    <span class="status-indicator" id="htmlStatus"></span>
+                    <span id="htmlStatusText">Media: Inactivo</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>YouTube</h2>
+
+            <div class="yt-controls">
+                <div class="playback-controls">
+                    <button id="play-button" data-cmd="play" class="button" aria-label="Reproducir">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <button id="next-video" data-cmd="next" class="button" aria-label="Siguiente">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 6v12l8.5-6L6 6zM16 6v12h2V6h-2z"/>
+                        </svg>
+                    </button>
+                    <button id="pause-video" data-cmd="pause" class="button" aria-label="Pausar">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    </button>
+                    <button id="stop-video" data-cmd="stop" class="button" aria-label="Detener">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 6h12v12H6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="youtube-input">
+                <input id="url" type="text" placeholder="Link: www.youtube.com/watch?v=...">
+                <button id="load">PlayUrl</button>
+            </div>
+                <div>
+                    <span class="status-indicator" id="youtubeStatus"></span>
+                    <span id="youtubeStatusText">YouTube: Inactivo</span>
+                 <!--   <button id="toggleAutoplayBtn"  class="button" aria-label="OFF">
+                        <svg width="16" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6 6h12v12H6z"/>
+                        </svg>
+                    </button>-->
+                </div>
+            </div>
+        </div>
+
+       <!-- Sección de Pantallas Actualizada -->
+<div class="section">
+    <h2>Pantallas</h2>
+    <div class="screen-controls">
+        <div class="quick-actions">
+            <h4>Abrir Pantalla</h4>
+            <div class="screen-action-group">
+                <button class="btn-project" onclick="openDisplay(1)">P1</button>
+                <button class="btn-project" onclick="openDisplay(2)">P2</button>
+                <button class="btn-project" onclick="openDisplay(3)">P3</button>
+                <button class="btn-close-all" onclick="closeAllDisplays()">CTodas</button>
+            </div>
+
+
+            <h4>Cerrar Pantalla</h4>
+            <div class="screen-action-group">
+                <button class="btn-close" onclick="closeDisplay(1)">C1</button>
+                <button class="btn-close" onclick="closeDisplay(2)">C2</button>
+                <button class="btn-close" onclick="closeDisplay(3)">C3</button>
+                <button onclick="openWithCustomUrl()" style="padding: 6px 8px; font-size: 11px;">Abrir</button>
+            </div>
+        </div>
+
+        <!-- Selector de URL personalizada -->
+        <div style="margin: 2px 0;">
+          <!--  <label for="customUrl" style="font-size: 12px; display: block; margin-bottom: 4px;">URL Personalizada:</label>-->
+            <div class="youtube-input">
+                <input type="text" id="customUrl" placeholder="http://localhost:4000/otra-pagina.html" style="flex: 1;">
+                <select id="displaySelector">
+                <option value="1">P1</option>
+                <option value="2">P2</option>
+                <option value="3">P3</option>
+            </select>
+            </div>
+
+        </div>
+
+        <div class="screen-action-group">
+            <button class="btn-refresh" onclick="refreshDisplays()">Refrescar</button>
+
+            <button onclick="testApiConnection()" style="background-color: #9C27B0;">Probar Conexión</button>
+        </div>
+<div class="display-info" style="font-size: 11px; color: #666; text-align: center; margin: 4px 0;">
+            </div>
+        <div id="apiStatus" class="api-status"></div>
+    </div>
+</div>
+    <script src="ctl_audio3.js" defer></script>
+    <!-- Sección de Pantallas Actualizada -->
+<script>
+    // Configuración de la API
+    const API_BASE_URL = 'http://localhost:4000/api';
+
+    // Almacenar las pantallas disponibles
+    let availableDisplays = [];
+
+    // URLs por defecto
+    const DEFAULT_URLS = {
+        1: 'http://localhost:4000/proyector.html',
+        2: 'http://localhost:4000/proyector.html',
+        3: 'http://localhost:4000/pagina2.html'
+    };
+
+    // Función para mostrar mensajes de estado
+    function showApiStatus(message, isSuccess = true) {
+        const statusElement = document.getElementById('apiStatus');
+        statusElement.textContent = message;
+        statusElement.className = `api-status ${isSuccess ? 'success' : 'error'}`;
+        statusElement.style.display = 'block';
+
+        setTimeout(() => {
+            statusElement.style.display = 'none';
+        }, 3000);
+    }
+
+    // Función para hacer requests a la API
+    async function apiRequest(endpoint, method = 'GET', data = null) {
+        try {
+            console.log(`🔧 Enviando ${method} a ${API_BASE_URL}${endpoint}`, data);
+
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            if (data && (method === 'POST' || method === 'PUT')) {
+                options.body = JSON.stringify(data);
+            }
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+
+            console.log(`📨 Respuesta recibida:`, response.status, response.statusText);
+
+            if (!response.ok) {
+                let errorDetail = '';
+                try {
+                    const errorData = await response.json();
+                    errorDetail = errorData.error || JSON.stringify(errorData);
+                } catch (e) {
+                    errorDetail = await response.text();
+                }
+
+                throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetail}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ Resultado:', result);
+            return result;
+
+        } catch (error) {
+            console.error('❌ Error en la API:', error);
+            showApiStatus(`Error: ${error.message}`, false);
+            throw error;
+        }
+    }
+
+    // Obtener el ID real de la pantalla por índice
+    function getDisplayId(displayIndex) {
+        if (availableDisplays.length === 0) {
+            throw new Error('No hay pantallas disponibles. Haz clic en "Refrescar" primero.');
+        }
+
+        if (displayIndex < 1 || displayIndex > availableDisplays.length) {
+            throw new Error(`Pantalla ${displayIndex} no disponible. Solo hay ${availableDisplays.length} pantallas.`);
+        }
+
+        // displayIndex 1 = primera pantalla, 2 = segunda, etc.
+        return availableDisplays[displayIndex - 1].id;
+    }
+
+    // Funciones específicas para pantallas
+    async function openDisplay(displayIndex, customUrl = null) {
+        try {
+            const displayId = getDisplayId(displayIndex);
+            const url = customUrl || DEFAULT_URLS[displayIndex];
+
+            if (!url) {
+                showApiStatus(`No hay URL definida para pantalla ${displayIndex}`, false);
+                return;
+            }
+
+            const data = {
+                displayId: displayId,
+                url: url
+            };
+
+            console.log(`🔄 Abriendo pantalla ${displayIndex} (ID: ${displayId}) con URL:`, url);
+            const result = await apiRequest('/open', 'POST', data);
+            showApiStatus(`Pantalla ${displayIndex} abierta`, true);
+            return result;
+
+        } catch (error) {
+            console.error('❌ Error al abrir pantalla:', error);
+            showApiStatus(error.message, false);
+        }
+    }
+
+    async function closeDisplay(displayIndex) {
+        try {
+            const displayId = getDisplayId(displayIndex);
+            const data = { displayId: displayId };
+
+            console.log(`🔄 Cerrando pantalla ${displayIndex} (ID: ${displayId})`);
+            const result = await apiRequest('/close', 'POST', data);
+            showApiStatus(`Pantalla ${displayIndex} cerrada`, true);
+            return result;
+        } catch (error) {
+            console.error('❌ Error al cerrar pantalla:', error);
+            showApiStatus(error.message, false);
+        }
+    }
+
+    async function closeAllDisplays() {
+        try {
+            console.log('🔄 Cerrando todas las pantallas');
+            const result = await apiRequest('/close-all', 'POST');
+            showApiStatus('Todas las pantallas cerradas', true);
+            return result;
+        } catch (error) {
+            console.error('❌ Error al cerrar todas las pantallas:', error);
+        }
+    }
+
+    async function refreshDisplays() {
+        try {
+            console.log('🔄 Actualizando información de pantallas');
+            const displays = await apiRequest('/displays', 'GET');
+            availableDisplays = displays;
+            console.log('📊 Pantallas obtenidas:', displays);
+
+            updateDisplayButtons(displays);
+            showApiStatus(`Encontradas ${displays.length} pantallas`, true);
+            return displays;
+
+        } catch (error) {
+            console.error('❌ Error al refrescar pantallas:', error);
+        }
+    }
+
+    // Actualizar la interfaz con las pantallas disponibles
+    function updateDisplayButtons(displays) {
+        const buttonsContainer = document.querySelector('.quick-actions');
+
+        // Actualizar el texto informativo
+        const infoText = buttonsContainer.querySelector('.display-info');
+        if (infoText) {
+            infoText.textContent = `Pantallas disponibles: ${displays.length} (P1 = Primera pantalla, P2 = Segunda, etc.)`;
+        }
+
+        console.log(`🎯 Pantallas disponibles: ${displays.length}`);
+        displays.forEach((display, index) => {
+            console.log(`  Pantalla ${index + 1}: ID=${display.id}, ${display.bounds.width}x${display.bounds.height}`);
+        });
+    }
+
+    // Función para obtener fuentes disponibles
+    async function getSources() {
+        try {
+            console.log('🔄 Obteniendo fuentes disponibles');
+            const sources = await apiRequest('/sources', 'GET');
+            console.log('📁 Fuentes obtenidas:', sources);
+            return sources;
+        } catch (error) {
+            console.error('❌ Error al obtener fuentes:', error);
+        }
+    }
+
+    // Función para probar la conexión con la API
+    async function testApiConnection() {
+        try {
+            console.log('🧪 Probando conexión con la API...');
+            const result = await apiRequest('/displays', 'GET');
+            console.log('✅ Conexión exitosa con la API');
+            showApiStatus('Conectado a la API', true);
+            return true;
+        } catch (error) {
+            console.error('❌ No se pudo conectar con la API:', error);
+            showApiStatus('No se pudo conectar con la API', false);
+            return false;
+        }
+    }
+ // Función para abrir con URL personalizada
+    function openWithCustomUrl() {
+        const customUrl = document.getElementById('customUrl').value;
+        const displayIndex = parseInt(document.getElementById('displaySelector').value);
+
+        if (!customUrl) {
+            showApiStatus('Por favor ingresa una URL', false);
+            return;
+        }
+
+        // Validar formato de URL básico
+        if (!customUrl.startsWith('http://') && !customUrl.startsWith('https://')) {
+            showApiStatus('La URL debe comenzar con http:// o https://', false);
+            return;
+        }
+
+        openDisplay(displayIndex, customUrl);
+        document.getElementById('customUrl').value = ''; // Limpiar campo después de usar
+    }
+
+    // Cargar información al iniciar
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Inicializando control de pantallas...');
+
+        // Probar conexión después de un breve delay
+        setTimeout(() => {
+            testApiConnection().then(connected => {
+                if (connected) {
+                    refreshDisplays();
+                    getSources();
+                }
+            });
+        }, 1000);
+    });
+</script>
+</body>
+</html>

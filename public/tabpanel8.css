@@ -1,0 +1,159 @@
+   /* Estilos base para optimizar rendimiento */
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+   }
+
+   body {
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+       background-color: #1e1e1e;
+       color: #fff;
+       height: 100vh;
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
+   }
+   button {
+       appearance: auto;
+
+       text-align: center;
+       cursor: default;
+       box-sizing: border-box;
+       background-color: buttonface;
+       margin: 0em 0em 0em 0em;
+       padding-block: 1px;
+       padding-inline: 6px;
+       border-width: 2px;
+       border-style: outset;
+       border-color: buttonborder;
+       border-image: initial;
+   }
+   .header {
+       background-color: #2d2d30;
+       padding: 10px 15px;
+       border-bottom: 1px solid #3e3e42;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       flex-shrink: 0;
+   }
+
+   .title {
+       font-size: 18px;
+       font-weight: bold;
+       color: #007acc;
+   }
+
+   .tabs {
+       display: flex;
+       gap: 5px;
+       flex-wrap: wrap;
+   }
+
+   .tab {
+       background-color: #333337;
+       border: none;
+       color: #cccccc;
+       padding: 8px 12px;
+       border-radius: 4px;
+       cursor: pointer;
+       font-size: 14px;
+       transition: all 0.2s ease;
+       white-space: nowrap;
+   }
+
+   .tab:hover {
+       background-color: #3e3e42;
+   }
+
+   .tab.active {
+       background-color: #007acc;
+       color: white;
+   }
+
+   .content-area {
+       flex: 1;
+       position: relative;
+       overflow: hidden;
+   }
+
+   .tab-content {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       display: none;
+       background-color: #252526;
+   }
+
+   .tab-content.active {
+       display: block;
+   }
+
+   .tab-content iframe {
+       width: 100%;
+       height: 100%;
+       border: none;
+       background-color: #1e1e1e;
+   }
+
+   .footer {
+       background-color: #2d2d30;
+       padding: 8px 15px;
+       border-top: 1px solid #3e3e42;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       flex-shrink: 0;
+   }
+
+   .fullscreen-btn {
+       background-color: #007acc;
+       color: white;
+       border: none;
+       padding: 6px 12px;
+       border-radius: 4px;
+       cursor: pointer;
+       display: flex;
+       align-items: center;
+       gap: 6px;
+       font-size: 14px;
+   }
+
+   .fullscreen-btn:hover {
+       background-color: #005a9e;
+   }
+
+   .iframe-placeholder {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       height: 100%;
+       color: #888;
+       font-size: 16px;
+   }
+
+   /* Indicador de carga */
+   .loading {
+       position: relative;
+   }
+
+   .loading::after {
+       content: "";
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       width: 20px;
+       height: 20px;
+       margin: -10px 0 0 -10px;
+       border: 2px solid #007acc;
+       border-radius: 50%;
+       border-top-color: transparent;
+       animation: spin 1s linear infinite;
+   }
+
+   @keyframes spin {
+       to { transform: rotate(360deg); }
+   }

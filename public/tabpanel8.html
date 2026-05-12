@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tabpanel8.css">
+    <title>menu biblia</title>
+    <style>
+
+
+        /* Header Styles */
+        .header {
+            background-color: #3fee91c4;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+
+
+        .title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #89b4fa;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tab {
+            background-color: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s;
+        }
+
+        .tab:hover {
+            background-color: #45475a;
+        }
+
+        .tab.active {
+            background-color: #89b4fa;
+            color: #11111b;
+        }
+
+        /* Content Area */
+
+
+        .tab-content {
+            display: none;
+            height: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .iframe-placeholder {
+            background-color: #181825;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #313244;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #11111b;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #313244;
+        }
+
+        .fullscreen-btn {
+            background-color: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .fullscreen-btn:hover {
+            background-color: #45475a;
+        }
+
+        /* Mobile Controls */
+        .mobile-controls {
+            position: fixed;
+            bottom: 60px;
+            right: 15px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .mobile-toggle {
+            background-color: #89b4fa;
+            color: #11111b;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                padding: 8px 10px;
+            }
+
+              .header.hidden {
+            transform: translateY(-100%);
+        }
+
+            .title {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .tabs {
+                gap: 3px;
+            }
+
+            .tab {
+
+                font-size: 0.75rem;
+                flex: 1 0 calc(33.333% - 6px);
+                text-align: center;
+            }
+
+            .content-area {
+                padding: 10px;
+                /*margin-top: 60px; */ /* Compensar el header fijo */
+            }
+
+            .mobile-controls {
+                display: block;
+            }
+
+            .footer {
+                padding: 8px 10px;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab {
+                flex: 1 0 calc(50% - 6px);
+                font-size: 0.7rem;
+                padding: 10px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header hidden" id="header">
+        <div class="title"></div>
+        <div class="tabs">
+        <button class="tab" data-tab="web">Biblia</button>
+            <button class="tab" data-tab="media">Media</button>
+            <button class="tab" data-tab="yt">Youtube</button>
+            <button class="tab" data-tab="lista">Player</button>
+            <button class="tab" data-tab="lyrics">Lyrics</button>
+            <button class="tab" data-tab="lyrics2">Lyrics2</button>
+            <button class="tab" data-tab="bibliam">Imagenes</button>
+            <button class="tab active" data-tab="tempop">Búsqueda</button>
+            <button class="tab" data-tab="mix">MIXER</button>
+            <button class="tab" data-tab="control">Player</button>
+            <button class="tab" data-tab="config">ConfPantallas</button>
+             <button class="tab" data-tab="tempo">OBS</button>
+            <button class="tab" data-tab="biblia">BibliaFull</button>
+            <button class="tab" data-tab="menu">Accesos</button>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <!-- Contenido de las pestañas con carga diferida -->
+        <div class="tab-content" id="biblia-content">
+            <div class="iframe-placeholder">Cargando Biblia...</div>
+        </div>
+        <div class="tab-content active" id="media-content">
+            <div class="iframe-placeholder">Cargando Media...</div>
+        </div>
+        <div class="tab-content" id="yt-content">
+            <div class="iframe-placeholder">Cargando YouTube...</div>
+        </div>
+
+
+        <div class="tab-content" id="lista-content">
+            <div class="iframe-placeholder">Cargando Lista...</div>
+        </div>
+        <div class="tab-content" id="lyrics-content">
+            <div class="iframe-placeholder">Cargando Lyrics...</div>
+        </div>
+         <div class="tab-content" id="lyrics2-content">
+            <div class="iframe-placeholder">Cargando Lyrics2...</div>
+        </div>
+        <div class="tab-content" id="bibliam-content">
+            <div class="iframe-placeholder">Cargando Imagenes...</div>
+        </div>
+
+        <div class="tab-content active" id="tempop-content">
+            <div class="iframe-placeholder">Cargando Búsqueda...</div>
+        </div>
+        <div class="tab-content" id="tempo-content">
+            <div class="iframe-placeholder">Cargando OBS...</div>
+        </div>
+        <div class="tab-content" id="mix-content">
+            <div class="iframe-placeholder">Cargando Mix...</div>
+        </div>
+        <div class="tab-content" id="config-content">
+            <div class="iframe-placeholder">Cargando Conf Pantallas...</div>
+        </div>
+        <div class="tab-content" id="control-content">
+            <div class="iframe-placeholder">Cargando Control...</div>
+        </div>
+        <div class="tab-content" id="web-content">
+            <div class="iframe-placeholder">Cargando Biblia...</div>
+        </div>
+        <div class="tab-content" id="menu-content">
+            <div class="iframe-placeholder">Cargando Menu...</div>
+        </div>
+    </div>
+
+    <div class="mobile-controls">
+        <button class="mobile-toggle" id="mobile-toggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="footer">
+        <div>Biblia App</div>
+        <button class="fullscreen-btn" id="fullscreen-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 3H5C3.89543 3 3 3.89543 3 5V8M21 8V5C21 3.89543 20.1046 3 19 3H16M16 21H19C20.1046 21 21 20.1046 21 19V16M3 16V19C3 20.1046 3.89543 21 5 21H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Pantalla Completa
+        </button>
+    </div>
+<script src="tabpanel8.js" defer></script>
+    <script>
+
+    </script>
+</body>
+</html>

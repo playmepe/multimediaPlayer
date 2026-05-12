@@ -1,0 +1,825 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Oswald:wght@700&family=Bungee&family=Righteous&family=Abril+Fatface&family=Playfair+Display:wght@700&family=Lobster&family=Ewert&family=Faster+One&family=Changa+One&family=Alfa+Slab+One&display=swap");
+body {
+            font-family: Arial, sans-serif;
+           /* display: flex;*/
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            overflow: hidden;
+          /*  flex-direction: column;
+            position: relative; */
+        }
+
+
+        /*para titulo*/
+        .title-background {
+            padding: 0px; /* Espaciado interno */
+            border-radius: 8px; /* Bordes redondeados (opcional) */
+            display: inline-block; /* Asegura que el fondo solo cubra el texto */
+            text-shadow: rgba(255, 255, 255, 0.8) -2px 3px 0px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional para dar profundidad */
+        }
+
+        .hidden {
+            display: none; /* Clase para ocultar el div */
+        }
+
+        /* inicio tamaño imagen  */
+        .image-container {
+          /*  width: 1920px;
+            height: 1080px;*/
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            align-content: center;
+        }
+        /*
+         * .background-image {
+         *    max-height: 100%;
+         *    max-width: 100%;
+         *    height: 100%;
+         *    width: auto;
+         * }
+         *
+         * .background-image {
+         *    height: 100%;
+         *    width: auto;
+         * }
+         *
+         * .image-container img {
+         *    height: auto;
+         *    width: auto;
+         * }*/
+        /* fin imagen */
+
+
+        .linea:hover {
+            background-color: #f0f0f0;
+        }
+
+        .linea.seleccionada {
+            background-color: #add8e6; /* Color de selección */
+        }
+        .linea-atenuada {
+            opacity: 0.5; /* Atenuar */
+            font-size: 16px; /* Tamaño de fuente normal */
+        }
+        .linea-cancioxn {
+            transition: transform 0.1s ease;
+        }
+
+        .show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hide {
+            transform: translateY(-20px); /* Mueve las líneas hacia arriba */
+            opacity: 0; /* Desvanece las líneas */
+        }
+   *     .linea-cancion1 {
+            font-weight: bold; /* Resaltar con negrita */
+            text-align: center; /* Centrar el texto */
+            margin: 10px 0; /* Espaciado entre líneas */
+            font-size: 54px; /* Ajustar el tamaño de la fuente */
+            color: #000; /* Color más oscuro */
+        }
+        .linea-cancion2 {
+            opacity: 0.8; /* Atenuar */
+            text-align: center; /* Centrar el texto */
+            margin: 10px 0; /* Espaciado entre líneas */
+            font-size: 50px; /* Ajustar el tamaño de la fuente */
+        }
+        .linea-cancion {
+            opacity: 0; /* Inicialmente invisible */
+            transform: translateY(30px); /* Mover hacia abajo */
+            transition: opacity 0.5s ease, transform 0.5s ease; /* Transiciones para la animación */
+        }
+
+        .linea-cancion.show {
+            opacity: 1; /* Hacer visible */
+            transform: translateY(0); /* Volver a la posición original */
+        }
+
+        .linea-cancion.hide {
+            opacity: 0; /* Hacer visible */
+            transform: translateY(-20); /* Volver a la posición original */
+        }
+
+        #video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            border-bottom: 2px solid #ddd;
+            padding: 0px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            z-index: 1;
+             flex-direction: column;
+            resize: both;
+            overflow: hidden;
+        }
+#player {
+            /*width: 100%;*/
+            height: 100%;
+          /*  object-fit: fill; /* O usar 'cover' para mantener la relación de aspecto */
+
+        }
+        .video-container {
+    position: relative;
+}
+
+video {
+            width: 100%;
+            height: 100%;
+        }
+
+        .content-box {
+
+            opacity: 0;
+
+        }
+        #video-title {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 1.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        background-color: rgba(0,0,0,0.5);
+        padding: 10px 0;
+        z-index: 100;
+        }
+        #contentBox {
+        /*background: rgba(255, 255, 255, 0.8);*/
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        max-width: 98%;
+        /*width: 100%;*/
+        /*overflow: hidden;*/                /*para que nada quede afuera*/
+        justify-content: center;
+        box-sizing: border-box;
+        z-index: 1;
+        position: fixed;
+        left: 0.5cm;
+        right: 0.5cm;
+        flex-direction: column;   /*para banner*/
+        transition: opacity 2s ease-in-out; /* Efecto de transición */
+        display: none; /* Ocultar por defecto */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        width: auto;
+        z-index: 10;
+        /* Transición para efectos de aparición/desaparición */
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        /* Texto centrado
+        text-align: center; */
+        }
+
+        .content-box.show {
+            visibility: visible; /* Hacerlo interactivo */
+            opacity: 1; /* Hacerlo completamente visible */
+            display: block; /* Mostrar el elemento */
+        }
+        .content-box.hide {
+             opacity: 0; /* Hacerlo invisible */
+             display: none; /* Ocultar el elemento */
+        }
+
+/* Inicialmente, la imagen de fondo está oculta */
+#background-image2 {
+  /*   position: absolute; /* Asegúrate de que la imagen esté posicionada correctamente */
+ /*  top: 0;
+    left: 0;
+    width: 100%;*/
+    height: 100%;
+   /* object-fit: cover; /* Asegura que la imagen cubra todo el fondo */
+    opacity: 0; /* Inicialmente visible */
+    transition: opacity 2s ease-in-out; /* Duración de la transición */
+    z-index: -1; /* Asegúrate de que la imagen esté detrás del contenido */
+}
+
+.fade-out {
+    opacity: 0; /* Se vuelve completamente transparente */
+    pointer-events: none; /* Evitar interacciones mientras se está desvaneciendo */
+}
+
+.fade-in {
+    opacity: 1; /* Se vuelve completamente opaco */
+    pointer-events: auto; /* Permitir interacciones */
+}
+
+        #background-image {
+            position: absolute;  /*position: fixed;  Cambiado a fixed para que se ajuste siempre */
+            bottom: 0; /* Alinear con el bottom del contentBox */
+            left: 0;
+            width: 100%;
+            height: 100%; /* Ocupa todo el viewport */
+            object-fit: cover; /* Mantiene la relación de aspecto */
+            z-index: -1;
+            z-index: 0;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+        #title {
+            font-size: 60px;
+         /*   font-weight: bold;*/
+            margin-bottom: 10px;
+            padding: 10px;
+            margin-bottom: -15px;
+        }
+.verses-class {
+font-weight: bolder; /* Resaltar con negrita */
+/*color: #000;*/
+font-size: 60px;
+font-weight: bold;
+            text-align: justify;
+
+            line-height: 1.5; /* Añadir espacio entre líneas */
+           /* text-shadow: 2px 1px 1px white, 0 0 1em blue, 0 0 0.2em red;
+            /*text-shadow: #1Caa20 1px 0 10px;
+            text-shadow: 1px 1px 2px black,
+            0 0 1em blue,
+             0 0 0.2em blue;*/
+             overflow: hidden;
+        }
+ /*     #verse-content {
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+     font-weight: bolder; /* Resaltar con negrita */
+  /*   text-align: justify;
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 10px;
+            border: 0px solid #ddd;
+            border-radius: 10px;
+            background-color: rgba(249, 249, 249, 0.8); /*color content versos*/
+ /*           box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+           font-size: 50px; /* Aumentar el tamaño de la fuente */
+
+  /*      }
+*/
+        .linea-cancion1 {
+            font-weight: bolder; /* Resaltar con negrita */
+            text-align: center; /* Centrar el texto */
+            margin: 10px 0; /* Espaciado entre líneas */
+            font-size: 56px; /* Ajustar el tamaño de la fuente */
+            color: #000; /* Color más oscuro */
+           /* text-shadow: 1px 1px 1px red, 0 0 1em red, 0 0 0.2em red;*/
+            text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0;
+            line-height: 1.5; /* Añadir espacio entre líneas */
+            /*background-color: rgba(249, 209, 249, 0.8);*/
+            overflow: hidden;
+        }
+      /*  .linea-cancion2 {
+            opacity: 0.5; /* Atenuar */
+         /*   color: #b6bbcd; /* Color más oscuro */
+        /*    text-align: center; /* Centrar el texto */
+         /*   margin: 10px 0; /* Espaciado entre líneas */
+          /*  font-size: 40px; /* Ajustar el tamaño de la fuente */
+         /*   overflow: hidden;
+        }*/
+
+        .linea-destacada {
+            opacity: 0.5; /* Atenuar */
+            font-weight: bold; /* Resaltar con negrita */
+            font-size: 20px; /* Aumentar el tamaño de la fuente */
+            color: #000; /* Color más oscuro */
+            overflow: hidden;
+        }
+
+    /*    .linea-cancion {
+            padding: 10px;
+            border: 0px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            overflow: hidden;
+        }*/
+
+    /* Tema 1 (Claro) */
+        #background-image[data-theme="1"] {
+        display: block;
+        }
+
+#contentBox[data-theme="1"] {
+background: #ffffff;
+background-color: rgba(255, 255, 255, 0.8);
+}
+/* Estilo para el título */
+#title[data-theme="1"] {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    /*color: white !important; /* Texto blanco */
+    padding: 10px 15px;
+    border-radius: 5px;
+    transform: translateX(6%);
+    margin-bottom: -15px;
+    display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="1"]  {
+background-color: #ffffff; /*#10c0f9;
+/*rgba(0, 0, 0, 0.8);*/
+color: #070809 !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;
+text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;
+text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0;
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -2px -2px 0px #ffffffc9, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+
+
+#contentBox[data-theme="2"] {
+background: rgba(255, 255, 255, 0.8);
+background-color: #48ff00;
+}
+/* Estilo para el título */
+#title[data-theme="2"] {
+background-color: rgba(200, 245, 151, 0.8) !important;
+/*color: white !important; /* Texto blanco */
+/*padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;*/
+}
+#verse-content[data-theme="2"]  {
+background-color: rgba(200, 245, 151, 0.8); /* rgb(200 245 151 / 72%)Negro menos transparente */
+color: Black !important; /* Texto blanco */
+/*padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -2px -2px 0px #ffffffc9, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+
+
+/* Tema 1 (Claro) */
+#contentBox[data-theme="3"] {
+background: rgba(255, 255, 255, 0.8);
+background-color: #079bcb;
+
+}
+/* Estilo para el título */
+#title[data-theme="3"] {
+background-color: rgb(59 195 240 / 90%) !important;
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="3"]  {
+background-color: #10c0f9;
+/*rgba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;*/
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+/*
+#contentBox[data-theme="3"] {
+background: Blue;
+}
+
+#contentBox[data-theme="4"] #title {
+background: #f95d10;
+}
+*/
+/* Tema 1 (Claro) */
+#contentBox[data-theme="4"] {
+background: #d22671fa;
+/*background-color: rgba(0, 0, 0, 0.7); /* Negro con 70% de opacidad */
+text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;
+}
+/* Estilo para el título */
+#title[data-theme="4"] {
+background-color: rgb(237 81 176 / 54%) !important;
+color: white !important; /* Texto blanco */
+/*text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;*/
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0;
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="4"]  {
+background-color: #f1408efa;
+/*rgba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+/* Tema 1 (Claro) */
+#contentBox[data-theme="5"] {
+background: #4df140fa;
+background-color: rgb(72 176 28 / 70%);
+}
+/* Estilo para el título */
+#title[data-theme="5"] {
+background-color: rgb(127 219 106 / 90%) !important;
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="5"]  {
+background-color: #4df140fa;
+/*rgba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+
+/* Tema 1 (Claro) */
+#contentBox[data-theme="6"] {
+background: #f0f140fa;
+background-color: rgb(221 206 86 / 88%);
+}
+/* Estilo para el título */
+#title[data-theme="6"] {
+background-color: rgb(218 234 92 / 90%) !important;
+/*color: white !important; /* Texto blanco */
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="6"]  {
+background-color: #f0f140fa;
+/*rgba(0, 0, 0, 0.8);*/
+color: Black !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -2px -2px 0px #ffffffc9, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+
+#background-image[data-theme="1"] {
+display: block;
+}
+/* Tema 1 (Claro) */
+#contentBox[data-theme="7"] {
+background: rgb(127 240 158 / 0%);
+/*background-color: rgba(0, 0, 0, 0.7);  width: 100%;Negro con 70% de opacidad */
+
+}
+/* Estilo para el título */
+#title[data-theme="7"] {
+background-color: rgba(0, 0, 0, 0.9) !important; /* Negro casi sólido */
+color: white !important; /* Texto blanco */
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: 15px;
+display: inline-block;
+text-shadow:
+-1px -1px 0 #ffffff,
+1px -1px 0 #ffffff,
+-1px 1px 0 #ffffff,
+1px 1px 0 #ffffff; /* Borde negro */
+
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="7"]  {
+background-color: rgb(127 240 158 / 0%);
+/*rgba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+    color: #ffffff; /* Color del texto */
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; /* Borde negro */
+    text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+
+
+
+#background-image[data-theme="7"] {
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.verses-class[data-theme="7"]  {
+    font-weight: bolder; /* Resaltar con negrita */
+    color: #ffffff;
+    text-align: justify;
+    font-size: 65px;
+    line-height: 1.5; /* Añadir espacio entre líneas */
+    /* text-shadow: 2px 1px 1px white, 0 0 1em blue, 0 0 0.2em red;
+     *   /*text-shadow: #1Caa20 1px 0 10px;
+     *   text-shadow: 1px 1px 2px black,
+     *   0 0 1em blue,
+     *    0 0 0.2em blue;*/
+     overflow: hidden;
+}
+.linea-cancion1[data-theme="7"] {
+    font-weight: bolder; /* Resaltar con negrita */
+    text-align: center; /* Centrar el texto */
+    margin: 10px 0; /* Espaciado entre líneas */
+    font-size: 56px; /* Ajustar el tamaño de la fuente */
+    color: #000; /* Color más oscuro */
+    /*text-shadow: 1px 1px 1px red, 0 0 1em red, 0 0 0.2em red;*/
+    line-height: 1.5; /* Añadir espacio entre líneas */
+    /*background-color: rgba(249, 209, 249, 0.8);*/
+    overflow: hidden;
+    text-shadow:
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff,
+    -1px 1px 0 #ffffff,
+    1px 1px 0 #ffffff; /* Borde negro */
+}
+.linea-cancion2[data-theme="7"] {
+    opacity: 0.5; /* Atenuar */
+    color: #ffffff; /* Color más oscuro */
+    text-align: center; /* Centrar el texto */
+    margin: 10px 0; /* Espaciado entre líneas */
+    font-size: 75px; /* Ajustar el tamaño de la fuente */
+    overflow: hidden;
+}
+/* Estilo para el versículo */
+#contentBox[data-theme="9"] {
+display: flex;
+align-items: flex-end;
+flex-direction: column-reverse;
+/*background: #d22671fa;
+text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;*/
+}
+/* Estilo para el título */
+#title[data-theme="9"] {
+background-color: rgb(0 0 0 / 0%) !important;
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="9"]  {
+/*background-color: #f1408efa;
+rgba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}/* cuando un ancestro tenga data-theme="9", oculta solo la imagen */
+[data-theme="9"] #background-image,
+[data-theme="9"] .background-imgn {
+    display: none !important;
+}
+
+#contentBox[data-theme="10"] {
+display: flex;
+align-items: flex-end;
+flex-direction: column-reverse;
+/*background: #d22671fa;
+ t*ext-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;*/
+}
+/* Estilo para el título */
+#title[data-theme="10"] {
+background-color: rgb(0 0 0 / 0%) !important;
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="10"]  {
+/*background-color: #f1408efa;
+ r*gba(0, 0, 0, 0.8);*/
+color: white !important; /* Texto blanco */
+text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+}/* cuando un ancestro tenga data-theme="9", oculta solo la imagen */
+
+[data-theme="9"] #background-image,
+[data-theme="9"] .background-imgn {
+    display: none !important;
+}
+
+/* Tema 1 (Claro) */
+#background-image[data-theme="11"] {
+display: block;
+}
+
+#contentBox[data-theme="11"] {
+background: #ffffff;
+background-color: rgba(255, 255, 255, 0.8);
+/*display: flex;
+flex-direction: column;*/
+}
+/* Estilo para el título */
+#title[data-theme="11"] {
+/* background-color: rgba(255, 255, 255, 0.8) !important;*/
+/*color: white !important; /* Texto blanco */
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: -14px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="11"]  {
+background-color: #ffffff; /*#10c0f9;
+/*rgba(0, 0, 0, 0.8);*/
+color: #070809 !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;
+ * text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;
+ * text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0;
+ * text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -2px -2px 0px #ffffffc9, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+/*order: 2;  Esto coloca el versículo después del título */
+}
+/* Estilos para el título que queremos posicionar */
+.title-background[data-theme="11"] {
+    display: inline-block;
+    background-color: rgb(34, 155, 245);
+    font-family: 'Bungee', sans-serif;
+    text-shadow: rgba(145, 232, 50, 0.93) -7px 6px 17px;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+    /* Posicionamiento absoluto para mover libremente */
+    /* position: absolute;*/
+    z-index: 10;
+
+    /* Ejemplo de posición - puedes ajustar estos valores */
+    top: 241px;
+    left: 85%;
+    transform: translateX(6%);
+    inset: auto 30px 30px auto;
+    /* Efecto de rotación sutil */
+    transform: translateX(27%) rotate(-2deg);
+   /* order: 1;  Esto coloca el título primero en el orden de visualización */
+}
+
+
+
+/* Tema 1 (Claro) */
+#background-image[data-theme="12"] {
+display: block;
+}
+
+#contentBox[data-theme="12"] {
+background: #ffffff;
+background-color: rgba(255, 255, 255, 0.8);
+display: flex;
+flex-direction: column;
+}
+/* Estilo para el título */
+#title[data-theme="12"] {
+/* background-color: rgba(255, 255, 255, 0.8) !important;*/
+/*color: white !important; /* Texto blanco */
+padding: 10px 15px;
+border-radius: 5px;
+
+margin-bottom: -14px;
+display: inline-block;
+}
+/* Estilo para el versículo */
+#verse-content[data-theme="12"]  {
+background-color: #ffffff; /*#10c0f9;
+/*rgba(0, 0, 0, 0.8);*/
+color: #070809 !important; /* Texto blanco */
+padding: 15px;
+border-radius: 5px;
+font-size: 1.2em;
+line-height: 1.6;
+/*text-shadow: -2px -1px 3px #0f84a9, 0px 0px 2em #00000094, -1px 1px 2em #f1408e;
+ * text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3) !important;
+ * text-shadow: -3px 1px 0px #ffffff, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0;
+ * text-shadow: -3px 1px 0px #0f0d0d, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;*/
+text-shadow: -2px -2px 0px #ffffffc9, 0px -2px 1em #48ff00cf, 1px 1px 0.2em #00ff0df0 !important;
+order: 2; /* Esto coloca el versículo después del título */
+/*position: relative;*/
+}
+/* Estilos para el título que queremos posicionar */
+.title-background[data-theme="12"] {
+    display: inline-block;
+    background-color: rgb(34, 155, 245);
+    font-family: 'Bungee', sans-serif;
+    text-shadow: rgba(145, 232, 50, 0.93) -7px 6px 17px;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+    /* Posicionamiento absoluto para mover libremente */
+    position: absolute;
+    z-index: 10;
+
+    /* Ejemplo de posición - puedes ajustar estos valores */
+    top: 241px;
+    left: 85%;
+    transform: translateX(6%);
+    inset: auto 245px -50px auto;
+    /*inset: auto 30px 30px auto;*/
+    /* Efecto de rotación sutil */
+    transform: translateX(27%) rotate(-2deg);
+    order: 1; /* Esto coloca el título primero en el orden de visualización */
+}
+/* Versículo de ejemplo */
+.verse-container[data-theme="12"]  {
+    order: 2; /* Esto coloca el versículo después del título */
+    position: relative;
+}
+#contentBox[data-theme="12"]   {
+/*background: rgba(255, 255, 255, 0.8);*/
+border-radius: 15px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+padding: 15px;
+max-width: 98%;
+/*width: 100%;
+overflow: hidden;*/
+justify-content: center;
+box-sizing: border-box;
+z-index: 1;
+position: fixed;
+left: 0.5cm;
+right: 0.5cm;
+flex-direction: column;   /*para banner*/
+transition: opacity 2s ease-in-out; /* Efecto de transición */
+display: none; /* Ocultar por defecto */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+width: auto;
+z-index: 10;
+/* Transición para efectos de aparición/desaparición */
+transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+/* Texto centrado
+ t*ext-align: center; */
+
+}
+
+
+#contentBox[data-position="bottom"] {
+bottom: 20px;
+bottom: 100px  !important;
+}
+#contentBox[data-position="center"] {
+display: flex;
+justify-content: center;
+width: 100%;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+
+}
+#contentBox[data-position="top"] {
+top:20px;
+
+}
+#contentBox[data-position="centerm"] {
+display: flex;
+justify-content: center;
+left: 5cm;
+top: 50%;
+right: 5cm;
+transform: translate(-1%, -50%);
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles_proyector.css">
+    <title>Pantalla Bibliaplay</title>
+    <style>
+        /* Estilos para el reproductor de YouTube */
+        #youtube-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 45; /* Reducido para que esté debajo del contentBox */
+            display: none;
+        }
+
+        #youtube-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 46;
+            opacity: 1;
+            pointer-events: none;
+            background-color: black;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #youtube-overlay.hidden {
+            opacity: 0;
+        }
+
+        #youtube-play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 47;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #youtube-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 45;
+        }
+
+        /* Ajustes para el contentBox - Mayor z-index para que esté sobre YouTube */
+        .content-box {
+            z-index: 100 !important; /* Aseguramos que esté por encima de YouTube */
+        }
+
+        /* Para diferentes posiciones midiplayer*/
+#karaoke-overlay[data-position="top"] {
+    top: 10%;
+    bottom: auto;
+    transform: none;
+}
+
+#karaoke-overlay[data-position="middle"] {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+}
+
+#karaoke-overlay[data-position="bottom"] {
+    bottom: 15%;
+    top: auto;
+    transform: none;
+}
+
+/* Animación de entrada/salida */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}
+    </style>
+</head>
+<body>
+
+<!-- Contenedor del reproductor de YouTube -->
+<div id="youtube-container">
+    <div id="youtube-overlay"></div>
+    <div id="youtube-iframe"></div>
+</div>
+
+<!-- Contenido Reproductor html -->
+<div id="video-player" heigth=1080 width=1920>
+    <video id="player" preload="auto" autoplay paused>
+  <!--   <video id="player" preload="auto" autoplay paused controls>-->
+        <source id="video-source" src="" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+</div>
+
+<div class="image-container">
+    <img id="background-image2" src="../img/mci-ilo1.png" class="background-image">
+</div>
+
+<div class="content-box hide" id="contentBox" data-theme="1">
+    <img id="background-image" class="background-imgn" src="">
+    <div id="title" class="title-background" data-theme="1"></div>
+    <div id="verse-content" data-theme="1"></div>
+    <input type="checkbox" id="cancionCheckbox" class="hidden"><label for="cancionCheckbox" class="hidden">loopcancion</label>
+    <input type="checkbox" id="bibliaCheckbox" class="hidden"><label for="bibliaCheckbox" class="hidden">loopbiblia</label>
+</div>
+<script src = "scripts_proyector_midi.js" defer></script>
+
+</body>
+</html>
